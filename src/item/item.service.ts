@@ -39,4 +39,9 @@ export class ItemService {
         await this.htrItemRepository.delete({item: id});
         return await this.itemRepository.delete({id: id});
     }
+
+    async deleteAllItem() {
+        await this.htrItemRepository.query("delete from htritem");
+        return await this.itemRepository.query("delete from item");
+    }
 }

@@ -10,6 +10,7 @@ export class ItemController {
     ){}
 
     @Post()
+    @UsePipes(new ValidationPipe({ transform: true }))
     async createItem(@Body() item:ItemDto){
         return await this.itemService.createItem(item);
     }
@@ -17,7 +18,12 @@ export class ItemController {
     @Delete(':id')
     @UsePipes(new ValidationPipe({ transform: true }))
     async deleteItem(@Param('id') id: number){
-        console.log("112");
         return await this.itemService.deleteItem(id);
+    }
+
+    @Delete()
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async deleteAllItem(){
+        return await this.itemService.deleteAllItem();
     }
 }
