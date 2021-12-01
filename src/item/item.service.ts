@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ItemDto } from 'src/dto/item.dto';
 import { Htritem } from 'src/htritem/htritem.entity';
-import { Repository } from 'typeorm';
+import { Connection, getConnection, Repository } from 'typeorm';
 import { Item } from './item.entity';
 
 @Injectable()
@@ -35,9 +35,21 @@ export class ItemService {
         await this.itemRepository.save({...isItem, itemCount:isItem.itemCount+htrItem.htrItemCount});
     }
 
+    // async deleteItem(id: number) {
+    //     await this.htrItemRepository.delete({item: id});
+    //     return await this.itemRepository.delete({id: id});
+    // }
+
     async deleteItem(id: number) {
-        await this.htrItemRepository.delete({item: id});
-        return await this.itemRepository.delete({id: id});
+
+        await getConnection()
+            .createQueryBuilder()
+            .delete()
+            .from(Htritem)
+            .where('itemId = :id', {id: id})
+            .execute();
+
+            return await this.itemRepository.delete({id: id});
     }
 
     async deleteAllItem() {
