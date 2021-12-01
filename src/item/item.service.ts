@@ -1,8 +1,5 @@
-import { number } from '@hapi/joi';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { reduce } from 'rxjs';
-import { HtritemDto } from 'src/dto/htritem.dio';
 import { ItemDto } from 'src/dto/item.dto';
 import { Htritem } from 'src/htritem/htritem.entity';
 import { Repository } from 'typeorm';
@@ -10,6 +7,7 @@ import { Item } from './item.entity';
 
 @Injectable()
 export class ItemService {
+    
     constructor(
         @InjectRepository(Item)
         private itemRepository: Repository<Item>,
@@ -25,22 +23,20 @@ export class ItemService {
         return newItem;
       }
 
-    async searchItem(id: number, count: number, htr: Htritem){
+    async searchItem(id: number, htrItem: Htritem){
         const isItem = await this.itemRepository.findOne(id);
-        console.log(count);
         if(!isItem){
+            await this.htrItemRepository.delete(htrItem.id);
             throw new HttpException('!!No Item',HttpStatus.NOT_FOUND);
-        }else {
-
+        } else if(isItem.itemCount+htrItem.htrItemCount < 0 || htrItem.htrItemCount === 0){
+            await this.htrItemRepository.delete(htrItem.id);
+            throw new HttpException('!!No Create',HttpStatus.NOT_FOUND);
         }
-        const a = await this.htrItemRepository.save(htr);
-        a.htrItemCount = a.htrItemCount+6;
-        // else if(isItem.itemCount+count.htrItemCount < 0){
-        //     throw new HttpException('!!No Create',HttpStatus.NOT_FOUND);
-        // }
-        console.log(a.htrItemCount);
-        console.log(isItem.itemCount+6);
-        console.log(count+6);
-        return isItem;
+        await this.itemRepository.save({...isItem, itemCount:isItem.itemCount+htrItem.htrItemCount});
+    }
+
+    async deleteItem(id: number) {
+        await this.htrItemRepository.delete({item: id});
+        return await this.itemRepository.delete({id: id});
     }
 }

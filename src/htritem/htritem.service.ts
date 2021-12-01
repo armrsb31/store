@@ -1,5 +1,5 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { HtritemDto } from 'src/dto/htritem.dio';
+import { HtritemDto } from 'src/dto/htritem.dto';
 import { ItemService } from 'src/item/item.service';
 import { Repository } from 'typeorm';
 import { Htritem } from './htritem.entity';
@@ -13,9 +13,8 @@ export class HtritemService {
     ){}
 
     async creatHistoryItem(id: number,htrItem: HtritemDto): Promise<Htritem> {
-        const newHtrItem = await this.htrItemRepository.create({...htrItem, item: id});
-        const b = await this.itemService.searchItem(id, newHtrItem.htrItemCount, newHtrItem);
-        
-        return ;
+        const newHtrItem = await this.htrItemRepository.create({...htrItem, item: id, htrItemCount: htrItem.htritemCount}).save();
+        await this.itemService.searchItem(id, newHtrItem);
+        return newHtrItem;
     }
 }

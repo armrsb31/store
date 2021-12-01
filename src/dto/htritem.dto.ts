@@ -10,7 +10,6 @@ export class HtritemDto{
     @IsOptional()
     htritemDate: string;
 
-    @IsInt()
     @IsNumber()
     @IsOptional()
     htritemCount: number;

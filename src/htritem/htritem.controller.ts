@@ -1,5 +1,5 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
-import { HtritemDto } from 'src/dto/htritem.dio';
+import { Body, Controller, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { HtritemDto } from 'src/dto/htritem.dto';
 import { Htritem } from './htritem.entity';
 import { HtritemService } from './htritem.service';
 
@@ -11,8 +11,8 @@ export class HtritemController {
     ){}
 
     @Post(':id')
+    @UsePipes(new ValidationPipe({ transform: true }))
     async creatHistoryItem(@Param('id') id: number, @Body() htrItem: HtritemDto): Promise<Htritem>{
-        htrItem.itemId = id;
         return this.htritemService.creatHistoryItem(id,htrItem);
 
     }
