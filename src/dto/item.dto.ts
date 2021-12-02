@@ -1,11 +1,10 @@
-import { IsString, IsNumber, IsOptional, IsInt } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class ItemDto{
 
     @IsString()
-    @IsOptional()
     itemName: string;
-
+    
     @IsNumber()
     @IsOptional()
     id: number;
@@ -13,9 +12,12 @@ export class ItemDto{
     @IsString()
     @IsOptional()
     itemDate: string;
-
+    
     @IsNumber()
     @IsOptional()
     itemCount: number;
+    
+    @IsNumber()
+    stockId: number;
 
 }

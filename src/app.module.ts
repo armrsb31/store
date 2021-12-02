@@ -5,7 +5,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { ItemModule } from './item/item.module';
-import { HtritemModule } from './htritem/htritem.module';
+import { HistoryModule } from './history/history.module';
+import { StockModule } from './stock/stock.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { HtritemModule } from './htritem/htritem.module';
     }),
     DatabaseModule,
     ItemModule,
-    HtritemModule
+    HistoryModule,
+    StockModule
   ],
   controllers: [AppController],
   providers: [AppService],
